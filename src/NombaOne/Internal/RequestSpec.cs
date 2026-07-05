@@ -34,6 +34,26 @@ internal sealed class RequestSpec
 
     /// <summary>Per-call options.</summary>
     internal RequestOptions? Options { get; }
+
+    /// <summary>
+    /// Return a copy of this spec with one query parameter set (overwriting any
+    /// existing value). Used to thread the pagination cursor while preserving
+    /// the original filters.
+    /// </summary>
+    internal RequestSpec WithQueryParam(string key, string value)
+    {
+        var query = new Dictionary<string, string?>();
+        if (Query is not null)
+        {
+            foreach (var pair in Query)
+            {
+                query[pair.Key] = pair.Value;
+            }
+        }
+
+        query[key] = value;
+        return new RequestSpec(Method, Path, query, Body, Options);
+    }
 }
 
 /// <summary>Shared <see cref="HttpMethod"/> instances, including a PATCH verb that netstandard2.0 lacks.</summary>
