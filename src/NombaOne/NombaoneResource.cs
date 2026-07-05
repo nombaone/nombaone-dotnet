@@ -18,6 +18,9 @@ public abstract class NombaoneResource
 
     private protected Nombaone Client { get; }
 
+    /// <summary>A body for bodyless POSTs — serializes to <c>{}</c>, matching the API's expectation.</summary>
+    private protected static readonly object EmptyBody = new();
+
     /// <summary>Percent-encode one path segment (ids come from user input — never trust raw).</summary>
     private protected static string Seg(string value) => Uri.EscapeDataString(value);
 
