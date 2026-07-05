@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <AssemblyName>NombaOne</AssemblyName>
+    <RootNamespace>NombaOne</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>NombaOne</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Nomba One</Authors>
+    <Company>Nomba One</Company>
+    <Product>NombaOne .NET SDK</Product>
+    <Description>Official .NET SDK for the NombaOne subscription-billing API — recurring billing for Nigeria over card, direct debit, and bank transfer, with dunning and a kobo-exact ledger.</Description>
+    <PackageTags>nombaone;nomba;billing;subscriptions;payments;nigeria;api;sdk</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://docs.nombaone.xyz</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nombaone/nomba-dotnet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <!-- netstandard2.0 needs the STJ package and the async-iterator interfaces;
+       net8.0 has both in the shared framework. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <InternalsVisibleTo Include="NombaOne.Tests" />
+  </ItemGroup>
+
+</Project>
