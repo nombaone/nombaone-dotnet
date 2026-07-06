@@ -18,6 +18,11 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- The committed OpenAPI snapshot the conformance suite guards. -->
+  <ItemGroup>
+    <None Include="..\..\spec\openapi.json" Link="spec\openapi.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\NombaOne\NombaOne.csproj" />
   </ItemGroup>
