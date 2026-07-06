@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8EDA4CAA-8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NombaOne.Tests", "test\NombaOne.Tests\NombaOne.Tests.csproj", "{8D4FE92E-AFE2-469B-AB8E-7090E5A8D0F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{63C6CFA6-2D3C-4F30-A1F2-A12E408646FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NombaOne.Examples", "examples\NombaOne.Examples\NombaOne.Examples.csproj", "{878C8B5A-434C-4E53-B024-5B3B0D8F85EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +32,14 @@ Global
 		{8D4FE92E-AFE2-469B-AB8E-7090E5A8D0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D4FE92E-AFE2-469B-AB8E-7090E5A8D0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D4FE92E-AFE2-469B-AB8E-7090E5A8D0F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878C8B5A-434C-4E53-B024-5B3B0D8F85EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878C8B5A-434C-4E53-B024-5B3B0D8F85EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878C8B5A-434C-4E53-B024-5B3B0D8F85EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878C8B5A-434C-4E53-B024-5B3B0D8F85EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C155CE9F-3CD3-4DD2-9A80-AB9B98F84E6B} = {67B9C7DC-4016-4A7F-8418-0C73CC483DA6}
 		{8D4FE92E-AFE2-469B-AB8E-7090E5A8D0F0} = {8EDA4CAA-81A2-4A9C-9160-E077A5D9BAD1}
+		{878C8B5A-434C-4E53-B024-5B3B0D8F85EF} = {63C6CFA6-2D3C-4F30-A1F2-A12E408646FB}
 	EndGlobalSection
 EndGlobal
