@@ -62,3 +62,19 @@ public class NombaoneTimeoutException : NombaoneConnectionException
     {
     }
 }
+
+/// <summary>
+/// Webhook signature or timestamp verification failed — a missing/malformed
+/// header, a stale or future timestamp, an invalid signature, a missing secret,
+/// or a non-JSON body. Reject the delivery when this is thrown.
+/// </summary>
+public class WebhookVerificationException : NombaoneException
+{
+    /// <summary>Creates a new <see cref="WebhookVerificationException"/>.</summary>
+    /// <param name="message">The human-readable error message.</param>
+    /// <param name="innerException">The underlying cause, if any.</param>
+    public WebhookVerificationException(string message, Exception? innerException = null)
+        : base(message, innerException)
+    {
+    }
+}
