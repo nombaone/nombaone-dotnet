@@ -27,6 +27,9 @@ public abstract class NombaoneResource
     private protected Task<T> GetAsync<T>(string path, RequestOptions? options, CancellationToken cancellationToken) =>
         Client.SendAsync<T>(new RequestSpec(HttpVerbs.Get, path, options: options), cancellationToken);
 
+    private protected Task<T> GetAsync<T>(string path, IReadOnlyDictionary<string, string?>? query, RequestOptions? options, CancellationToken cancellationToken) =>
+        Client.SendAsync<T>(new RequestSpec(HttpVerbs.Get, path, query: query, options: options), cancellationToken);
+
     private protected Task<T> PostAsync<T>(string path, object? body, RequestOptions? options, CancellationToken cancellationToken) =>
         Client.SendAsync<T>(new RequestSpec(HttpVerbs.Post, path, body: body, options: options), cancellationToken);
 
