@@ -33,11 +33,20 @@ Official .NET SDK for the NombaOne subscription-billing API. NuGet package
   SDK call outside the spec); the **deliberate-break drill** was performed
   (breaking one path turned the suite red naming the route, then reverted).
 - **Live integration against the deployed sandbox**
-  (`https://sandbox.api.nombaone.xyz`) — 6 gated tests green: full lifecycle to
-  an **active** subscription, `advance-cycle` → real invoice, upcoming-invoice +
-  dunning reads, typed `CUSTOMER_NOT_FOUND` (`code`/`hint`/`docUrl`/`requestId`),
-  idempotency replay returning the identical resource, real cursor pagination,
-  and clean cancellation.
+  (`https://sandbox.api.nombaone.xyz`) — 7 gated tests green, including an
+  **exhaustive full-surface run that exercises every one of the 78 method
+  call-sites**: each call passes only on success or a *specific expected* typed
+  API error, so a wrong path/verb/body or an unexpected error fails the run and
+  names the method. Plus focused checks: full lifecycle to an **active**
+  subscription, `advance-cycle` → real invoice, upcoming-invoice + dunning reads,
+  a real `invoices.void` on an open `send_invoice` invoice, typed
+  `CUSTOMER_NOT_FOUND` (`code`/`hint`/`docUrl`/`requestId`), idempotency replay
+  returning the identical resource, real cursor pagination, and clean
+  cancellation. Confirmed successful on the wire: virtual-account issuance;
+  webhook `simulate` → delivery `retrieve`/`replay`; the mandate NIBSS 504
+  surfacing as a typed `SYSTEM_UPSTREAM_ERROR`; `mandates.retrieve` on a card
+  returning `PAYMENT_METHOD_KIND_MISMATCH`; all settlement reads returning the
+  typed subaccount-state error.
 - **Five runnable examples** (quickstart, pagination, lifecycle, webhook,
   dunning) **executed for real** against the sandbox.
 - Package **packed and consumed from an external scratch project** (local package
