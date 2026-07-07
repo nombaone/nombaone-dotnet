@@ -42,8 +42,9 @@ patch for fixes, minor for new features, major for breaking changes.
    - In the GitHub repo → *Settings → Secrets and variables → Actions →
      Variables* → add a **variable** (not a secret) named `NUGET_USER` set to
      your nuget.org username. The workflow feeds it to the OIDC login action; no
-     API key is ever stored. Until `NUGET_USER` is set, the publish step skips
-     cleanly (the build stays green).
+     API key is ever stored. Until both are configured, the release workflow
+     **fails red** (a release that can't publish should never look green) — it
+     turns green only once the package is actually published.
 
 ---
 

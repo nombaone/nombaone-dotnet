@@ -1,9 +1,11 @@
 name: Release
 
 # Merge-triggered CD via NuGet Trusted Publishing (OIDC — no stored secret).
-# On push to main: run the gate, pack, and publish only when the manifest
-# <Version> is new (--skip-duplicate no-ops otherwise). A merge that does not
-# bump <Version> in src/NombaOne/NombaOne.csproj is a no-op.
+# On push to main: run the gate, pack, and publish. Publishing an already-live
+# <Version> is the ONE deliberate green no-op (--skip-duplicate, for merges that
+# don't bump the version). Every other outcome — missing config, OIDC/auth
+# failure, upload error — fails the job RED, so you never see green while the
+# package is not actually live.
 on:
   push:
     branches: [main]
@@ -38,22 +40,23 @@ jobs:
       - name: Pack
         run: dotnet pack src/NombaOne/NombaOne.csproj -c Release --no-build -o artifacts
 
+      # A release build that cannot publish must be red, never a misleading green.
+      - name: Require publish configuration
+        run: |
+          if [ -z "${{ vars.NUGET_USER }}" ]; then
+            echo "::error::NUGET_USER repo variable is not set. Set it to your nuget.org username (Settings -> Secrets and variables -> Actions -> Variables) and add a Trusted Publishing policy for package NombaOne pointing at this repo + release.yml (see PUBLISHING.md)."
+            exit 1
+          fi
+
       # Exchange this workflow's OIDC token for a short-lived NuGet API key.
-      # Requires a Trusted Publishing policy on nuget.org for package NombaOne
-      # pointing at this repo + workflow, and the repo variable NUGET_USER
-      # (your nuget.org username). Skips cleanly until NUGET_USER is set.
       - name: NuGet login (OIDC Trusted Publishing)
         id: login
-        if: ${{ vars.NUGET_USER != '' }}
         uses: NuGet/login@v1
         with:
           user: ${{ vars.NUGET_USER }}
 
-      # Publish only if this version is new (--skip-duplicate no-ops an existing one).
+      # --skip-duplicate makes ONLY the "this exact version is already published"
+      # case a green no-op (the intended behavior when a merge doesn't bump
+      # <Version>). Auth, upload, and config errors still fail red.
       - name: Publish to NuGet
-        if: ${{ vars.NUGET_USER != '' }}
         run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-
-      - name: Publishing not configured yet
-        if: ${{ vars.NUGET_USER == '' }}
-        run: echo "::notice::Set the repo variable NUGET_USER and a Trusted Publishing policy on nuget.org (see PUBLISHING.md) to enable publishing."
