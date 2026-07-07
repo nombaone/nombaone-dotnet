@@ -1,11 +1,11 @@
 name: Release
 
-# Tag-driven publish: push a tag like `v0.1.0` to build, pack, and push to NuGet.
-# Requires a NUGET_API_KEY repository secret.
+# Merge-triggered CD. On push to main: run the gate, pack, and publish to NuGet
+# only when the manifest <Version> is new (--skip-duplicate no-ops otherwise).
+# A merge that does not bump <Version> in src/NombaOne/NombaOne.csproj is a no-op.
 on:
   push:
-    tags:
-      - "v*"
+    branches: [main]
 
 permissions:
   contents: read
@@ -24,7 +24,10 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Build (Release)
+      - name: Format check
+        run: dotnet format --verify-no-changes --severity warn
+
+      - name: Build (Release, both target frameworks)
         run: dotnet build -c Release --no-restore
 
       - name: Test
@@ -33,5 +36,10 @@ jobs:
       - name: Pack
         run: dotnet pack src/NombaOne/NombaOne.csproj -c Release --no-build -o artifacts
 
-      - name: Push to NuGet
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      # Publish only if this version is new. --skip-duplicate makes a re-run of an
+      # already-published version a successful no-op, so every merge can run this
+      # safely and only a version bump actually ships.
+      - name: Publish to NuGet (skip if version already exists)
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate

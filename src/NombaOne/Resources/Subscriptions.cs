@@ -723,14 +723,16 @@ public sealed class SubscriptionsResource : NombaoneResource
 
     /// <summary>
     /// Swap the payment method that bills this subscription — the card-update path
-    /// during dunning. Provide exactly one of <c>PaymentMethodReference</c> or <c>CheckoutToken</c>.
+    /// during dunning. Provide exactly one of <c>PaymentMethodReference</c> or
+    /// <c>CheckoutToken</c>. Returns the attached <see cref="PaymentMethod"/> (not
+    /// the subscription).
     /// </summary>
     /// <param name="id">The subscription id (<c>nbo…sub</c>).</param>
     /// <param name="parameters">The new payment method.</param>
     /// <param name="options">Per-call options.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
-    public Task<Subscription> UpdatePaymentMethodAsync(string id, SubscriptionUpdatePaymentMethodParams parameters, RequestOptions? options = null, CancellationToken cancellationToken = default) =>
-        PostAsync<Subscription>($"/subscriptions/{Seg(id)}/payment-method", parameters, options, cancellationToken);
+    public Task<PaymentMethod> UpdatePaymentMethodAsync(string id, SubscriptionUpdatePaymentMethodParams parameters, RequestOptions? options = null, CancellationToken cancellationToken = default) =>
+        PostAsync<PaymentMethod>($"/subscriptions/{Seg(id)}/payment-method", parameters, options, cancellationToken);
 
     /// <summary>Preview the next invoice without charging or storing anything.</summary>
     /// <param name="id">The subscription id (<c>nbo…sub</c>).</param>

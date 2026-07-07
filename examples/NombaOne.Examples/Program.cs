@@ -15,6 +15,7 @@ Func<Task> run = which switch
     "lifecycle" => Lifecycle.RunAsync,
     "webhook" => WebhookReceiver.RunAsync,
     "dunning" => SandboxDunning.RunAsync,
+    "verify" => Verify.RunAsync,
     _ => throw new ArgumentException($"Unknown example '{which}'. Use quickstart | pagination | lifecycle | webhook | dunning."),
 };
 

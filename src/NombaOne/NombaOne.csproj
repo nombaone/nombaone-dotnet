@@ -19,7 +19,7 @@
     <PackageTags>nombaone;nomba;billing;subscriptions;payments;nigeria;api;sdk</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://docs.nombaone.xyz</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/nombaone/nomba-dotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/nombaone/nombaone-dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IncludeSymbols>true</IncludeSymbols>

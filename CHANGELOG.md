@@ -6,6 +6,22 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- `Subscriptions.UpdatePaymentMethodAsync` now returns the attached
+  `PaymentMethod` (the actual wire response) instead of `Subscription` — caught
+  by the full-surface live parse-verification.
+
+### Added
+
+- Owner-readable full-surface live verification (`dotnet run --project
+  examples/NombaOne.Examples -- verify`): calls every method against the sandbox,
+  checks each response's wire `domain` against the model, and prints a verdict
+  (`N methods | ok … | expected-errors … | DEFECTS 0`).
+- `PUBLISHING.md` (non-.NET-programmer release guide) and merge-triggered
+  NuGet CD that publishes only when `<Version>` is new.
+- The SDK version is now single-sourced from `<Version>` and read back at runtime.
+
 ## [0.1.0] - 2026-07-06
 
 Initial release — the complete NombaOne API surface for .NET.
