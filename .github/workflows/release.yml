@@ -1,13 +1,15 @@
 name: Release
 
-# Merge-triggered CD. On push to main: run the gate, pack, and publish to NuGet
-# only when the manifest <Version> is new (--skip-duplicate no-ops otherwise).
-# A merge that does not bump <Version> in src/NombaOne/NombaOne.csproj is a no-op.
+# Merge-triggered CD via NuGet Trusted Publishing (OIDC — no stored secret).
+# On push to main: run the gate, pack, and publish only when the manifest
+# <Version> is new (--skip-duplicate no-ops otherwise). A merge that does not
+# bump <Version> in src/NombaOne/NombaOne.csproj is a no-op.
 on:
   push:
     branches: [main]
 
 permissions:
+  id-token: write # OIDC token exchanged for a short-lived NuGet key
   contents: read
 
 jobs:
@@ -36,16 +38,22 @@ jobs:
       - name: Pack
         run: dotnet pack src/NombaOne/NombaOne.csproj -c Release --no-build -o artifacts
 
-      # Publish only if this version is new (--skip-duplicate no-ops an existing
-      # version). If NUGET_API_KEY isn't configured yet, skip with an actionable
-      # notice instead of failing red — so merges stay green until the one-time
-      # NuGet setup in PUBLISHING.md is done.
-      - name: Publish to NuGet (skips cleanly until a key is configured)
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: |
-          if [ -z "$NUGET_API_KEY" ]; then
-            echo "::notice::NUGET_API_KEY secret is not set — skipping publish. Add it (or enable Trusted Publishing) per PUBLISHING.md, then re-run this workflow."
-            exit 0
-          fi
-          dotnet nuget push "artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      # Exchange this workflow's OIDC token for a short-lived NuGet API key.
+      # Requires a Trusted Publishing policy on nuget.org for package NombaOne
+      # pointing at this repo + workflow, and the repo variable NUGET_USER
+      # (your nuget.org username). Skips cleanly until NUGET_USER is set.
+      - name: NuGet login (OIDC Trusted Publishing)
+        id: login
+        if: ${{ vars.NUGET_USER != '' }}
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      # Publish only if this version is new (--skip-duplicate no-ops an existing one).
+      - name: Publish to NuGet
+        if: ${{ vars.NUGET_USER != '' }}
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Publishing not configured yet
+        if: ${{ vars.NUGET_USER == '' }}
+        run: echo "::notice::Set the repo variable NUGET_USER and a Trusted Publishing policy on nuget.org (see PUBLISHING.md) to enable publishing."

@@ -32,16 +32,18 @@ patch for fixes, minor for new features, major for breaking changes.
    <https://www.nuget.org/packages/NombaOne> — it should say "not found". (Once
    you publish the first version, the name is yours.)
 3. **Push this repository** to `https://github.com/nombaone/nombaone-dotnet`.
-4. **Give CI permission to publish**, one of two ways:
-   - **Preferred — Trusted Publishing (no secret to manage):** on NuGet.org,
-     open your account → *Trusted Publishing*, and add a policy for package
-     `NombaOne` pointing at the GitHub repo `nombaone/nombaone-dotnet` and the
-     workflow file `.github/workflows/release.yml`. (If you use this, tell the
-     engineer so they can switch the workflow's publish step to it.)
-   - **Simple — an API key secret:** on NuGet.org → *API Keys* → create a key
-     scoped to push `NombaOne`. In the GitHub repo → *Settings → Secrets and
-     variables → Actions*, add a secret named `NUGET_API_KEY` with that value.
-     The release workflow already uses it.
+4. **Give CI permission to publish via Trusted Publishing (OIDC — no secret to
+   store).** The release workflow is already wired for this. Two small steps:
+   - On NuGet.org → your account → *Trusted Publishing* → add a policy for
+     package `NombaOne`, pointing at repository `nombaone/nombaone-dotnet`,
+     workflow `release.yml`, branch `main`. (For the very first publish, NuGet
+     lets you pre-register the package name here so the policy can exist before
+     the package does.)
+   - In the GitHub repo → *Settings → Secrets and variables → Actions →
+     Variables* → add a **variable** (not a secret) named `NUGET_USER` set to
+     your nuget.org username. The workflow feeds it to the OIDC login action; no
+     API key is ever stored. Until `NUGET_USER` is set, the publish step skips
+     cleanly (the build stays green).
 
 ---
 
