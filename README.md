@@ -12,7 +12,7 @@ Targets `net8.0` and `netstandard2.0` (runs on .NET 8+, .NET Framework 4.6.2+, a
 
 ## Quickstart
 
-Grab a sandbox key (`nbo_sandbox_…`) from the [dashboard](https://app.nombaone.xyz), set it as `NOMBAONE_API_KEY`, and you are three objects away from a live subscription:
+Grab a sandbox key (`nbo_sandbox_…`) from the [dashboard](https://console.nombaone.xyz), set it as `NOMBAONE_API_KEY`, and you are three objects away from a live subscription:
 
 ```csharp
 using NombaOne;
